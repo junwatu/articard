@@ -1,6 +1,8 @@
 import http from "node:http";
 import express from "express";
+import * as dotenv from "dotenv";
 
+dotenv.config();
 const app = express();
 const SRV_PORT = process.env.TELP_PORT | 3003;
 
