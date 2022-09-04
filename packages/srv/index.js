@@ -4,7 +4,7 @@ import * as dotenv from "dotenv";
 
 dotenv.config();
 const app = express();
-const SRV_PORT = process.env.TELP_PORT | 3003;
+const SRV_PORT = process.env.TELP_PORT || 3003;
 
 app.use((req, res) => {
   console.log(`request: ${req.url}`);
