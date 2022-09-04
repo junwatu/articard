@@ -1,0 +1,17 @@
+{
+  "name": "telp",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "run-srv": "npm run -w ./packages/srv start",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Equan P. (@junwatu)",
+  "license": "MIT",
+  "workspaces": [
+    "packages/srv",
+    "packages/kln"
+  ]
+}
