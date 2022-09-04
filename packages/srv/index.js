@@ -20,6 +20,13 @@ app.get("/", (req, res) => {
   res.end("root");
 });
 
+app.use((req, res) => {
+  res.writeHead(404, { "Content-Type": "application/json" });
+  const errorObj = { code: 404, error: "route not found" };
+  telpLog.error(errorObj);
+  res.end(JSON.stringify(errorObj));
+});
+
 http
   .createServer(app)
   .listen(SRV_PORT, () => telpLog.info(`server_port:${SRV_PORT}`));
