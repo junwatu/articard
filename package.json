@@ -13,5 +13,8 @@
   "workspaces": [
     "packages/srv",
     "packages/kln"
-  ]
+  ],
+  "engines": {
+    "node": ">= 16.17.0" 
+  }
 }
