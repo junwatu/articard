@@ -2,12 +2,11 @@
   "env": {
     "node": true
   },
-  "extends": ["eslint:recommended", "prettier"],
+  "extends": ["plugin:jest/recommended", "eslint:recommended", "prettier"],
   "overrides": [],
   "parserOptions": {
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-
   "rules": {}
 }
