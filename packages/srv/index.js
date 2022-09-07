@@ -30,3 +30,5 @@ app.use((req, res) => {
 http
   .createServer(app)
   .listen(SRV_PORT, () => telpLog.info(`server_port:${SRV_PORT}`));
+
+export { app as telpServer };
