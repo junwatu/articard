@@ -1,13 +1,14 @@
 import http from "node:http";
 import express from "express";
-import * as dotenv from "dotenv";
 import logger from "pino";
-
-dotenv.config();
+import axios from "axios";
+import { config } from "./config.js";
 
 const telpLog = logger();
 const app = express();
-const SRV_PORT = process.env.TELP_PORT || 3003;
+
+const SRV_PORT = config.app.port;
+const USERSET_URL = config.sources.rijksmuseum.usersets[0].url;
 
 app.use((req, res, next) => {
   telpLog.info(`request: ${req.url}`);
@@ -18,6 +19,17 @@ app.get("/", (req, res) => {
   res.statusCode = 200;
   res.setHeader("Content-Type", "text/plain");
   res.end("root");
+});
+
+app.get("/admin/api/data", (req, res) => {
+  axios({
+    method: "get",
+    url: USERSET_URL,
+    responseType: "json",
+  }).then((response) => {
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify(response.data));
+  });
 });
 
 app.use((req, res) => {
