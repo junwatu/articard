@@ -6,6 +6,9 @@ const telpConfig = {
   app: {
     port: process.env.TELP_PORT || 3003,
   },
+  database: {
+    url: process.env.TELP_DATABASE_URL,
+  },
   sources: {
     rijksmuseum: {
       user: process.env.TELP_RIJKSMUSEUM_USER_ID,
