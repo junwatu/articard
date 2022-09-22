@@ -27,8 +27,9 @@ app.get("/admin/api/data", (req, res) => {
     url: USERSET_URL,
     responseType: "json",
   }).then((response) => {
+    const dataUser = response.data;
     res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(JSON.stringify(response.data));
+    res.end(JSON.stringify(dataUser));
   });
 });
 
