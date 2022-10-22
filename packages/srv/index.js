@@ -1,14 +1,15 @@
 import http from "node:http";
 import express from "express";
 import logger from "pino";
-import axios from "axios";
+
+
 import { config } from "./config.js";
+import { getAPIData } from "./lib.js"
 
 const telpLog = logger();
 const app = express();
 
 const SRV_PORT = config.app.port;
-const USERSET_URL = config.sources.rijksmuseum.usersets[0].url;
 
 app.use((req, res, next) => {
   telpLog.info(`request: ${req.url}`);
@@ -21,18 +22,7 @@ app.get("/", (req, res) => {
   res.end("TELP");
 });
 
-app.get("/admin/api/data", (req, res) => {
-
-  axios({
-    method: "get",
-    url: USERSET_URL,
-    responseType: "json",
-  }).then((response) => {
-    const dataUser = response.data;
-    res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(JSON.stringify(dataUser));
-  });
-});
+app.get("/admin/api/data", getAPIData);
 
 app.use((req, res) => {
   res.writeHead(404, { "Content-Type": "application/json" });
