@@ -9,7 +9,7 @@
     "test": "NODE_OPTIONS=--experimental-vm-modules npx jest --detectOpenHandles"
   },
   "keywords": [],
-  "author": "",
+  "author": "Equan P.",
   "license": "MIT",
   "dependencies": {
     "axios": "^0.27.2",
