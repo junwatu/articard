@@ -18,10 +18,11 @@ app.use((req, res, next) => {
 app.get("/", (req, res) => {
   res.statusCode = 200;
   res.setHeader("Content-Type", "text/plain");
-  res.end("root");
+  res.end("TELP");
 });
 
 app.get("/admin/api/data", (req, res) => {
+
   axios({
     method: "get",
     url: USERSET_URL,
