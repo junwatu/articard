@@ -1,12 +1,11 @@
 import http from "node:http";
 import express from "express";
-import logger from "pino";
-
 
 import { config } from "./config.js";
 import { getAPIData } from "./lib.js"
+import { telpLog } from "./log.js"
 
-const telpLog = logger();
+
 const app = express();
 
 const SRV_PORT = config.app.port;
