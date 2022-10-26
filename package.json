@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "srv": "npm run -w ./packages/srv start",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles",
+    "redis": "docker run --name telp-redis -d redis"
   },
   "keywords": [],
   "author": "Equan P. (@junwatu)",
