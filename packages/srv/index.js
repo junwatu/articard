@@ -2,9 +2,12 @@ import http from "node:http";
 import express from "express";
 
 import { config } from "./config.js";
-import { getAPIData } from "./lib.js"
+import { getAPIData, connTelpDB } from "./lib.js"
 import { telpLog } from "./log.js"
 
+connTelpDB()
+  .then(() => telpLog.info(`mongodb database ok`))
+  .catch(err => telpLog.error(err))
 
 const app = express();
 
@@ -32,6 +35,6 @@ app.use((req, res) => {
 
 http
   .createServer(app)
-  .listen(SRV_PORT, () => telpLog.info(`server_port:${SRV_PORT}`));
+  .listen(SRV_PORT, () => telpLog.info(`server port: ${SRV_PORT}`));
 
 export { app as telpServer };
