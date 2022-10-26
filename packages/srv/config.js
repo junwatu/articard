@@ -7,7 +7,10 @@ const telpConfig = {
     port: process.env.TELP_PORT || 3003,
   },
   database: {
-    url: process.env.TELP_DATABASE_URL,
+    url: process.env.TELP_DATABASE_URL_DEV,
+  },
+  cache: {
+    url: process.env.TELP_REDIS_URL
   },
   sources: {
     rijksmuseum: {
