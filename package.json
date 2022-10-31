@@ -3,9 +3,11 @@
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "srv": "npm run -w ./packages/srv start",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles",
+    "redis": "docker run --name telp-redis -d redis"
   },
   "keywords": [],
   "author": "Equan P. (@junwatu)",
@@ -15,6 +17,6 @@
     "packages/kln"
   ],
   "engines": {
-    "node": ">= 16.17.0" 
+    "node": ">= 16.17.0"
   }
 }
