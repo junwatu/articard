@@ -1,5 +1,5 @@
 import { MongoClient } from 'mongodb';
-import { artObject } from '../__mocks__/unit.js';
+import { artObject } from '../unit.js';
 
 describe('MongoDB', () => {
     let connection;
