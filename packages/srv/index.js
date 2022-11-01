@@ -1,3 +1,7 @@
+/**
+ * TELP Server
+ */
+
 import http from 'node:http';
 import express from 'express';
 import bodyParser from 'body-parser';
@@ -49,7 +53,11 @@ app.get('/api/data/image/:id', async (req, res) => {
     res.end(`<img src="${imageUrl}" width="50%"/>`);
 });
 
-// admin
+/**
+ * Admin API
+ */
+app.get('/admin/api/data', getAPIData);
+
 app.get('/admin/api/data/delete/:id', async (req, res) => {
     const isDeleted = await deleteArtObject(req.params.id);
     res.statusCode = 200;
@@ -57,7 +65,7 @@ app.get('/admin/api/data/delete/:id', async (req, res) => {
     res.end(isDeleted);
 });
 
-app.get('/admin/api/data', getAPIData);
+/** 🔒🛅🔑 */
 
 app.use((req, res) => {
     res.writeHead(404, { 'Content-Type': 'application/json' });
