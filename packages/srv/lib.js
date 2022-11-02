@@ -16,6 +16,9 @@ let redisClient;
 })();
 
 const USERSET_URL = config.sources.rijksmuseum.usersets[0].url;
+const ARTCOLLDETAILS_URL = config.sources.rijksmuseum.collectionDetails.base;
+const APP_KEY = config.app.key;
+
 const ArtObject = mongoose.model('artobject', ArtObjectSchema);
 
 async function getAPIData(req, res) {
@@ -67,8 +70,8 @@ async function getRandomData() {
     return await ArtObject.findOne();
 }
 
-async function getDataByID(artObjectId) {
-    const yourData = await ArtObject.find({ id: artObjectId });
+async function getDataByID(artObjectNumber) {
+    const yourData = await ArtObject.find({ objectNumber: artObjectNumber });
     return yourData;
 }
 
@@ -77,9 +80,30 @@ async function getArtImage(artObjectId) {
     return artData[0]?.image?.cdnUrl;
 }
 
-async function deleteArtObject(artObjectId) {
-    const isDeleted = await ArtObject.deleteOne({ id: artObjectId });
+async function deleteArtObject(artObjectNumber) {
+    const isDeleted = await ArtObject.deleteOne({
+        objectNumber: artObjectNumber,
+    });
     return isDeleted;
+}
+
+async function getArtDetails(req, res) {
+    const artDetailsURL = `${ARTCOLLDETAILS_URL}/${req.params.artObjectNumber}?key=${APP_KEY}`;
+    await axios({
+        method: 'get',
+        url: artDetailsURL,
+        responseType: 'json',
+    }).then((response) => {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(response.data));
+    });
+}
+
+async function getImageByID(req, res) {
+    const imageUrl = await getArtImage(req.params.id);
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'text/html');
+    res.end(`<img src="${imageUrl}" width="50%"/>`);
 }
 
 export {
@@ -89,5 +113,7 @@ export {
     getArtImage,
     ArtObject,
     getRandomData,
+    getArtDetails,
+    getImageByID,
     connectTelpDatabase as connTelpDB,
 };
