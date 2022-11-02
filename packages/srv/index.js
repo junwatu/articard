@@ -11,9 +11,10 @@ import {
     getAPIData,
     getRandomData,
     getDataByID,
-    getArtImage,
     deleteArtObject,
+    getArtDetails,
     connTelpDB,
+    getImageByID,
 } from './lib.js';
 import { telpLog } from './log.js';
 
@@ -46,12 +47,9 @@ app.get('/api/data/:id', async (req, res) => {
     res.end(JSON.stringify(yourData));
 });
 
-app.get('/api/data/image/:id', async (req, res) => {
-    const imageUrl = await getArtImage(req.params.id);
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'text/html');
-    res.end(`<img src="${imageUrl}" width="50%"/>`);
-});
+app.get('/api/data/image/:id', getImageByID);
+
+app.get('/api/data/collection/:artObjectNumber', getArtDetails);
 
 /**
  * Admin API
