@@ -1,49 +1,55 @@
-import axios from "axios";
-import redis from "redis";
-import mongoose from "mongoose";
+import axios from 'axios';
+import redis from 'redis';
+import mongoose from 'mongoose';
 
-import { config } from "./config.js";
-import { telpLog } from "./log.js";
-import { ArtObjectSchema } from "./schema.js"
+import { config } from './config.js';
+import { telpLog } from './log.js';
+import { ArtObjectSchema } from './schema.js';
 
-let redisClient
+let redisClient;
 
 (async () => {
-    redisClient = await redis.createClient()
-    redisClient.on("error", (error) => telpLog.error(error))
-    redisClient.on("connect", () => telpLog.info("redis cache ok"))
-    await redisClient.connect()
-})()
+    redisClient = await redis.createClient();
+    redisClient.on('error', (error) => telpLog.error(error));
+    redisClient.on('connect', () => telpLog.info('redis cache ok'));
+    await redisClient.connect();
+})();
 
 const USERSET_URL = config.sources.rijksmuseum.usersets[0].url;
-const ArtObject = mongoose.model("artobject", ArtObjectSchema)
+const ARTCOLLDETAILS_URL = config.sources.rijksmuseum.collectionDetails.base;
+const APP_KEY = config.app.key;
+
+const ArtObject = mongoose.model('artobject', ArtObjectSchema);
 
 async function getAPIData(req, res) {
     try {
-        const dataCached = await redisClient.get("telpAPIDataCached")
+        const dataCached = await redisClient.get('telpAPIDataCached');
         if (dataCached) {
-            telpLog.info("Data from cache")
-            res.writeHead(200, { "Content-Type": "application/json" });
+            telpLog.info('Data from cache');
+            res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(dataCached);
         } else {
             await axios({
-                method: "get",
+                method: 'get',
                 url: USERSET_URL,
-                responseType: "json",
+                responseType: 'json',
             }).then((response) => {
                 const dataArtObject = response.data;
-                redisClient.set("telpAPIDataCached", JSON.stringify(dataArtObject))
-                telpLog.info("Data from server")
-                res.writeHead(200, { "Content-Type": "application/json" });
+                redisClient.set(
+                    'telpAPIDataCached',
+                    JSON.stringify(dataArtObject)
+                );
+                telpLog.info('Data from server');
+                res.writeHead(200, { 'Content-Type': 'application/json' });
 
-                saveData(dataArtObject)
+                saveData(dataArtObject);
 
                 res.end(JSON.stringify(dataArtObject));
             });
         }
     } catch (error) {
-        telpLog.error(error)
-        res.status(404).send("Data Unavailable")
+        telpLog.error(error);
+        res.status(404).send('Data Unavailable');
     }
 }
 
@@ -52,39 +58,88 @@ async function connectTelpDatabase() {
 }
 
 function saveData(data) {
-    const arrayArtObjects = data?.userSet?.setItems
+    const arrayArtObjects = data?.userSet?.setItems;
 
     arrayArtObjects.map((item) => {
-        const artObject = new ArtObject(item)
-        artObject.save()
-    })
+        const artObject = new ArtObject(item);
+        artObject.save();
+    });
 }
 
 async function getRandomData() {
-    return await ArtObject.findOne()
+    return await ArtObject.findOne();
 }
 
-async function getDataByID(artObjectId) {
-    const yourData = await ArtObject.find({ id: artObjectId })
-    return yourData
+async function getDataByID(artObjectNumber) {
+    const yourData = await ArtObject.find({ objectNumber: artObjectNumber });
+    return yourData;
+}
+
+async function getArtObjectByID(req, res) {
+    telpLog.info(req.params.id);
+    res.statusCode = 200;
+
+    const yourData = await getDataByID(req.params.id);
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(yourData));
 }
 
 async function getArtImage(artObjectId) {
-    const artData = await getDataByID(artObjectId)
-    return artData[0]?.image?.cdnUrl
+    const artData = await getDataByID(artObjectId);
+    return artData[0]?.image?.cdnUrl;
 }
 
-async function deleteArtObject(artObjectId) {
-    const isDeleted = await ArtObject.deleteOne({ id: artObjectId })
-    return isDeleted
+async function deleteArtObject(artObjectNumber) {
+    const isDeleted = await ArtObject.deleteOne({
+        objectNumber: artObjectNumber,
+    });
+    return isDeleted;
+}
+
+async function getArtDetails(req, res) {
+    const artDetailsURL = `${ARTCOLLDETAILS_URL}/${req.params.artObjectNumber}?key=${APP_KEY}`;
+    await axios({
+        method: 'get',
+        url: artDetailsURL,
+        responseType: 'json',
+    }).then((response) => {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(response.data));
+    });
+}
+
+async function getImageByID(req, res) {
+    const imageUrl = await getArtImage(req.params.id);
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'text/html');
+    res.end(`<img src="${imageUrl}" width="50%"/>`);
+}
+
+async function deleteArtObjectByID(req, res) {
+    const isDeleted = await deleteArtObject(req.params.id);
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(isDeleted));
+}
+
+async function getRandomArt(req, res) {
+    const rData = await getRandomData();
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(rData));
 }
 
 export {
+    getRandomArt,
     deleteArtObject,
     getAPIData,
     getDataByID,
     getArtImage,
     ArtObject,
     getRandomData,
-    connectTelpDatabase as connTelpDB
-}
+    getArtDetails,
+    getImageByID,
+    getArtObjectByID,
+    deleteArtObjectByID,
+    connectTelpDatabase as connTelpDB,
+};

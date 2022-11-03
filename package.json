@@ -5,9 +5,11 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "dev": "concurrently 'npm run srv' 'npm run client'",
     "srv": "npm run -w ./packages/srv start",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles",
-    "redis": "docker run --name telp-redis -d redis"
+    "client": "npm run -w ./packages/kln dev",
+    "redis-docker": "docker run --name telp-redis -d redis",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles"
   },
   "keywords": [],
   "author": "Equan P. (@junwatu)",
@@ -18,5 +20,8 @@
   ],
   "engines": {
     "node": ">= 16.17.0"
+  },
+  "dependencies": {
+    "concurrently": "^7.5.0"
   }
 }
