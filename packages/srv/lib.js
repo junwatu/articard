@@ -97,7 +97,9 @@ async function deleteArtObject(artObjectNumber) {
 }
 
 async function getArtDetails(req, res) {
-    const artDetailsURL = `${ARTCOLLDETAILS_URL}/${req.params.artObjectNumber}?key=${APP_KEY}`;
+    const artObjectNumber = req.params.artObjectNumber;
+    const artDetailsURL = `${ARTCOLLDETAILS_URL}/${artObjectNumber}?key=${APP_KEY}`;
+
     await axios({
         method: 'get',
         url: artDetailsURL,
