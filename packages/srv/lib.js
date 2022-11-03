@@ -75,6 +75,15 @@ async function getDataByID(artObjectNumber) {
     return yourData;
 }
 
+async function getArtObjectByID(req, res) {
+    telpLog.info(req.params.id);
+    res.statusCode = 200;
+
+    const yourData = await getDataByID(req.params.id);
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(yourData));
+}
+
 async function getArtImage(artObjectId) {
     const artData = await getDataByID(artObjectId);
     return artData[0]?.image?.cdnUrl;
@@ -106,7 +115,22 @@ async function getImageByID(req, res) {
     res.end(`<img src="${imageUrl}" width="50%"/>`);
 }
 
+async function deleteArtObjectByID(req, res) {
+    const isDeleted = await deleteArtObject(req.params.id);
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(isDeleted));
+}
+
+async function getRandomArt(req, res) {
+    const rData = await getRandomData();
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(rData));
+}
+
 export {
+    getRandomArt,
     deleteArtObject,
     getAPIData,
     getDataByID,
@@ -115,5 +139,7 @@ export {
     getRandomData,
     getArtDetails,
     getImageByID,
+    getArtObjectByID,
+    deleteArtObjectByID,
     connectTelpDatabase as connTelpDB,
 };

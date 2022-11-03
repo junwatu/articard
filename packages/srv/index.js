@@ -10,11 +10,12 @@ import { config } from './config.js';
 import {
     getAPIData,
     getRandomData,
-    getDataByID,
-    deleteArtObject,
     getArtDetails,
     connTelpDB,
     getImageByID,
+    deleteArtObjectByID,
+    getArtObjectByID,
+    getRandomArt,
 } from './lib.js';
 import { telpLog } from './log.js';
 
@@ -31,37 +32,16 @@ app.use((req, res, next) => {
     next();
 });
 
-app.get('/', async (req, res) => {
-    const rData = await getRandomData();
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify(rData));
-});
-
-app.get('/api/data/:id', async (req, res) => {
-    telpLog.info(req.params.id);
-    res.statusCode = 200;
-
-    const yourData = await getDataByID(req.params.id);
-    res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify(yourData));
-});
-
+app.get('/', getRandomArt);
+app.get('/api/data/:id', getArtObjectByID);
 app.get('/api/data/image/:id', getImageByID);
-
 app.get('/api/data/collection/:artObjectNumber', getArtDetails);
 
 /**
  * Admin API
  */
 app.get('/admin/api/data', getAPIData);
-
-app.get('/admin/api/data/delete/:id', async (req, res) => {
-    const isDeleted = await deleteArtObject(req.params.id);
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'text/plain');
-    res.end(isDeleted);
-});
+app.get('/admin/api/data/delete/:id', deleteArtObjectByID);
 
 /** 🔒🛅🔑 */
 
