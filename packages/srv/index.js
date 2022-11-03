@@ -5,26 +5,17 @@
 import http from 'node:http';
 import express from 'express';
 import bodyParser from 'body-parser';
-
 import { config } from './config.js';
-import {
-    getAPIData,
-    getRandomData,
-    getArtDetails,
-    connTelpDB,
-    getImageByID,
-    deleteArtObjectByID,
-    getArtObjectByID,
-    getRandomArt,
-} from './lib.js';
+import * as telpCore from './lib.js';
 import { telpLog } from './log.js';
 
-connTelpDB()
+const app = express();
+const SRV_PORT = config.app.port
+
+telpCore
+    .connTelpDB()
     .then(() => telpLog.info(`mongodb database ok`))
     .catch((err) => telpLog.error(err));
-
-const app = express();
-const SRV_PORT = config.app.port;
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use((req, res, next) => {
@@ -32,16 +23,16 @@ app.use((req, res, next) => {
     next();
 });
 
-app.get('/', getRandomArt);
-app.get('/api/data/:id', getArtObjectByID);
-app.get('/api/data/image/:id', getImageByID);
-app.get('/api/data/collection/:artObjectNumber', getArtDetails);
+app.get('/', telpCore.getRandomArt);
+app.get('/api/data/:id', telpCore.getArtObjectByID);
+app.get('/api/data/image/:id', telpCore.getImageByID);
+app.get('/api/data/collection/:artObjectNumber', telpCore.getArtDetails);
 
 /**
  * Admin API
  */
-app.get('/admin/api/data', getAPIData);
-app.get('/admin/api/data/delete/:id', deleteArtObjectByID);
+app.get('/admin/api/data', telpCore.getAPIData);
+app.get('/admin/api/data/delete/:id', telpCore.deleteArtObjectByID);
 
 /** 🔒🛅🔑 */
 
