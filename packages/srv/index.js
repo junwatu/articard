@@ -5,12 +5,25 @@
 import http from 'node:http';
 import express from 'express';
 import bodyParser from 'body-parser';
+import rateLimit from 'express-rate-limit';
 import { config } from './config.js';
 import * as telpCore from './lib.js';
 import { telpLog } from './log.js';
 
+const telpAPIReqLimit = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+    message: '100 API request every 15 minute only!',
+    handler: (request, response, next, options) => {
+        telpLog.info(options.message);
+        response.status(options.statusCode).send(options.message);
+    },
+});
+
 const app = express();
-const SRV_PORT = config.app.port
+const SRV_PORT = config.app.port;
 
 telpCore
     .connTelpDB()
@@ -22,7 +35,9 @@ app.use((req, res, next) => {
     telpLog.info(`request: ${req.url}`);
     next();
 });
+app.use('/api/data', telpAPIReqLimit);
 
+// User API
 app.get('/', telpCore.getRandomArt);
 app.get('/api/data/:id', telpCore.getArtObjectByID);
 app.get('/api/data/image/:id', telpCore.getImageByID);
