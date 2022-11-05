@@ -4,7 +4,7 @@ async function getData(artObjectId) {
 }
 
 export default async function Page() {
-  const data = await getData("RP-F-2005-158-12");
+  const data = await getData("AK-MAK-270");
   const imgSrc = data[0]?.image?.cdnUrl;
   return (
     <div>
