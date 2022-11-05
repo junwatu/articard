@@ -23,5 +23,8 @@
   },
   "dependencies": {
     "concurrently": "^7.5.0"
+  },
+  "devDependencies": {
+    "artillery": "^2.0.0-25"
   }
 }
