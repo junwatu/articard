@@ -100,14 +100,25 @@ async function getArtDetails(req, res) {
     const artObjectNumber = req.params.artObjectNumber;
     const artDetailsURL = `${ARTCOLLDETAILS_URL}/${artObjectNumber}?key=${APP_KEY}`;
 
-    await axios({
-        method: 'get',
-        url: artDetailsURL,
-        responseType: 'json',
-    }).then((response) => {
+    const artDetailsDataCached = await redisClient.get(artObjectNumber);
+    if (artDetailsDataCached) {
+        console.log(artDetailsDataCached);
+        telpLog.info('Data from cache');
         res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify(response.data));
-    });
+        res.end(artDetailsDataCached);
+    } else {
+        await axios({
+            method: 'get',
+            url: artDetailsURL,
+            responseType: 'json',
+        }).then((response) => {
+            redisClient.set(artObjectNumber, JSON.stringify(response.data));
+            telpLog.info('Data from server');
+
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify(response.data));
+        });
+    }
 }
 
 async function getImageByID(req, res) {
