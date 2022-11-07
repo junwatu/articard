@@ -6,6 +6,8 @@ import http from 'node:http';
 import express from 'express';
 import bodyParser from 'body-parser';
 import rateLimit from 'express-rate-limit';
+import cors from 'cors';
+
 import { config } from './config.js';
 import * as telpCore from './lib.js';
 import { telpLog } from './log.js';
@@ -16,9 +18,9 @@ const telpAPIReqLimit = rateLimit({
     standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
     message: '100 API request every 15 minute only!',
-    handler: (request, response, next, options) => {
+    handler: (req, res, next, options) => {
         telpLog.info(options.message);
-        response.status(options.statusCode).send(options.message);
+        res.status(options.statusCode).send(options.message);
     },
 });
 
@@ -30,6 +32,7 @@ telpCore
     .then(() => telpLog.info(`mongodb database ok`))
     .catch((err) => telpLog.error(err));
 
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use((req, res, next) => {
     telpLog.info(`request: ${req.url}`);
