@@ -16,12 +16,16 @@
   "license": "MIT",
   "workspaces": [
     "packages/srv",
-    "packages/kln"
+    "packages/kln",
+    "packages/stb"
   ],
   "engines": {
     "node": ">= 16.17.0"
   },
   "dependencies": {
     "concurrently": "^7.5.0"
+  },
+  "devDependencies": {
+    "artillery": "^2.0.0-25"
   }
 }

@@ -5,43 +5,52 @@
 import http from 'node:http';
 import express from 'express';
 import bodyParser from 'body-parser';
+import rateLimit from 'express-rate-limit';
+import cors from 'cors';
 
 import { config } from './config.js';
-import {
-    getAPIData,
-    getRandomData,
-    getArtDetails,
-    connTelpDB,
-    getImageByID,
-    deleteArtObjectByID,
-    getArtObjectByID,
-    getRandomArt,
-} from './lib.js';
+import * as telpCore from './lib.js';
 import { telpLog } from './log.js';
 
-connTelpDB()
-    .then(() => telpLog.info(`mongodb database ok`))
-    .catch((err) => telpLog.error(err));
+const telpAPIReqLimit = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+    message: '100 API request every 15 minute only!',
+    handler: (req, res, next, options) => {
+        telpLog.info(options.message);
+        res.status(options.statusCode).send(options.message);
+    },
+});
 
 const app = express();
 const SRV_PORT = config.app.port;
 
+telpCore
+    .connTelpDB()
+    .then(() => telpLog.info(`mongodb database ok`))
+    .catch((err) => telpLog.error(err));
+
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use((req, res, next) => {
     telpLog.info(`request: ${req.url}`);
     next();
 });
+app.use('/api/data', telpAPIReqLimit);
 
-app.get('/', getRandomArt);
-app.get('/api/data/:id', getArtObjectByID);
-app.get('/api/data/image/:id', getImageByID);
-app.get('/api/data/collection/:artObjectNumber', getArtDetails);
+// User API
+app.get('/', telpCore.getRandomArt);
+app.get('/api/data/:id', telpCore.getArtObjectByID);
+app.get('/api/data/image/:id', telpCore.getImageByID);
+app.get('/api/data/collection/:artObjectNumber', telpCore.getArtDetails);
 
 /**
  * Admin API
  */
-app.get('/admin/api/data', getAPIData);
-app.get('/admin/api/data/delete/:id', deleteArtObjectByID);
+app.get('/admin/api/data', telpCore.getAPIData);
+app.get('/admin/api/data/delete/:id', telpCore.deleteArtObjectByID);
 
 /** 🔒🛅🔑 */
 
