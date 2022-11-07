@@ -16,7 +16,8 @@
   "license": "MIT",
   "workspaces": [
     "packages/srv",
-    "packages/kln"
+    "packages/kln",
+    "packages/stb"
   ],
   "engines": {
     "node": ">= 16.17.0"
