@@ -22,7 +22,6 @@ describe('routes', () => {
         }
     });
 
-    // http://localhost:3113/api/data/AK-MAK-247
     test('/api/data/:id', async () => {
         try {
             const response = await request(telpServer).get(
