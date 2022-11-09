@@ -1,6 +1,7 @@
 import axios from 'axios';
 import redis from 'redis';
 import mongoose from 'mongoose';
+import fs from 'node:fs/promises';
 
 import { config } from './config.js';
 import { telpLog } from './log.js';
@@ -142,6 +143,54 @@ async function getRandomArt(req, res) {
     res.end(JSON.stringify(rData));
 }
 
+const isLoggedIn = async (req, res, next) => {
+    if (req.headers.authorization) {
+        let auth = req.headers.authorization.split(' ');
+        if (auth[0] === 'Basic') {
+            let decode = new Buffer.from(auth[1], 'base64').toString('utf-8');
+            let sep = decode.indexOf(':');
+
+            const authFlag = await authUser(
+                decode.substr(0, sep),
+                decode.substr(sep + 1)
+            );
+
+            if (authFlag) {
+                next();
+            } else {
+                res.statusCode = 401;
+                res.setHeader('Content-Type', 'application/json');
+                res.end(JSON.stringify({ api: 'Invalid Authorization' }));
+            }
+        } else {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'text/plain');
+            res.end('Unknown Authentication');
+        }
+    } else {
+        res.statusCode = 400;
+        res.setHeader('Content-Type', 'application/json');
+        res.end(
+            JSON.stringify({ api: 'You need authorization to access this API' })
+        );
+    }
+};
+
+async function authUser(username, password) {
+    const data = await fs.readFile('secret.json', { encoding: 'utf-8' });
+    let datar = JSON.parse(data).users;
+    for (const iterator of datar) {
+        if (
+            iterator?.username === username &&
+            iterator?.password === password
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+}
+
 export {
     getRandomArt,
     deleteArtObject,
@@ -155,4 +204,5 @@ export {
     getArtObjectByID,
     deleteArtObjectByID,
     connectTelpDatabase as connTelpDB,
+    isLoggedIn,
 };
