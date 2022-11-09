@@ -38,19 +38,23 @@ app.use((req, res, next) => {
     telpLog.info(`request: ${req.url}`);
     next();
 });
-app.use('/api/data', telpAPIReqLimit);
-
-// User API
-app.get('/', telpCore.getRandomArt);
-app.get('/api/data/:id', telpCore.getArtObjectByID);
-app.get('/api/data/image/:id', telpCore.getImageByID);
-app.get('/api/data/collection/:artObjectNumber', telpCore.getArtDetails);
 
 /**
  * Admin API
  */
-app.get('/admin/api/data', telpCore.getAPIData);
-app.get('/admin/api/data/delete/:id', telpCore.deleteArtObjectByID);
+app.get('/admin/api/data', telpCore.isLoggedIn, telpCore.getAPIData);
+app.get(
+    '/admin/api/data/delete/:id',
+    telpCore.isLoggedIn,
+    telpCore.deleteArtObjectByID
+);
+
+// User API
+app.get('/', telpCore.getRandomArt);
+app.use('/api/data', telpAPIReqLimit);
+app.get('/api/data/:id', telpCore.getArtObjectByID);
+app.get('/api/data/image/:id', telpCore.getImageByID);
+app.get('/api/data/collection/:artObjectNumber', telpCore.getArtDetails);
 
 /** 🔒🛅🔑 */
 
