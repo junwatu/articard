@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "concurrently 'npm run srv' 'npm run client'",
     "srv": "npm run -w ./packages/srv start",
-    "client": "npm run -w ./packages/kln dev",
+    "client": "npm run -w ./packages/stb dev",
     "redis-docker": "docker run --name telp-redis -d redis",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles"
   },
