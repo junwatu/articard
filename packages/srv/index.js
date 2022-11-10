@@ -1,16 +1,20 @@
 /**
  * TELP Server
  */
-
 import http from 'node:http';
 import express from 'express';
 import bodyParser from 'body-parser';
 import rateLimit from 'express-rate-limit';
 import cors from 'cors';
+import path from 'node:path';
 
 import { config } from './config.js';
 import * as telpCore from './lib.js';
 import { telpLog } from './log.js';
+import * as url from 'url';
+
+//const __filename = url.fileURLToPath(import.meta.url);
+const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
 const telpAPIReqLimit = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
@@ -33,14 +37,25 @@ telpCore
     .catch((err) => telpLog.error(err));
 
 app.use(cors());
+app.use(express.static(path.join(__dirname, '/publik')));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use((req, res, next) => {
     telpLog.info(`request: ${req.url}`);
     next();
 });
 
+// homepage`
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '/publik/index.html'));
+});
+app.use('/api/data', telpAPIReqLimit);
+app.get('/api/data/:id', telpCore.getArtObjectByID);
+app.get('/api/data/image/:id', telpCore.getImageByID);
+app.get('/api/data/collection/:artObjectNumber', telpCore.getArtDetails);
+
 /**
  * Admin API
+ * 🔒🛅🔑
  */
 app.get('/admin/api/data', telpCore.isLoggedIn, telpCore.getAPIData);
 app.get(
@@ -48,15 +63,6 @@ app.get(
     telpCore.isLoggedIn,
     telpCore.deleteArtObjectByID
 );
-
-// User API
-app.get('/', telpCore.getRandomArt);
-app.use('/api/data', telpAPIReqLimit);
-app.get('/api/data/:id', telpCore.getArtObjectByID);
-app.get('/api/data/image/:id', telpCore.getImageByID);
-app.get('/api/data/collection/:artObjectNumber', telpCore.getArtDetails);
-
-/** 🔒🛅🔑 */
 
 app.use((req, res) => {
     res.writeHead(404, { 'Content-Type': 'application/json' });
