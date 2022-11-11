@@ -2,9 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 
 export default function Card() {
   const getData = useCallback(async () => {
-    const response = await fetch(
-      `http://localhost:3113/api/data/RP-F-2005-159-47`
-    );
+    const response = await fetch(`http://localhost:3113/api/data/image/random`);
     const data = await response.json();
     const imgSrc = data[0]?.image?.cdnUrl;
     setData(imgSrc);
