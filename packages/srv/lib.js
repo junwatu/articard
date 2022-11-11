@@ -68,7 +68,11 @@ function saveData(data) {
 }
 
 async function getRandomData() {
-    return await ArtObject.findOne();
+    //get random data from mongodb collection
+    const count = await ArtObject.countDocuments();
+    const random = Math.floor(Math.random() * count);
+    const artObject = await ArtObject.findOne().skip(random);
+    return artObject;
 }
 
 async function getDataByID(artObjectNumber) {
