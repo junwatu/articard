@@ -11,7 +11,7 @@
     "preview": "npm run -w ./packages/stb preview",
     "redis-docker": "docker run --name telp-redis -d redis",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles",
-    "load-testing": "npx artillery quick --count 1100 --num 10 http://localhost:3113/api/data/RP-F-2005-159-47"
+    "load-testing": "npx artillery quick --count 1100 --num 10 http://localhost:3113/api/data/image/random"
   },
   "keywords": [],
   "author": "Equan P. (@junwatu)",
