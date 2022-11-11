@@ -44,11 +44,13 @@ app.use((req, res, next) => {
     next();
 });
 
-// homepage`
+app.use('/api/data', telpAPIReqLimit);
+
+// homepage
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '/publik/index.html'));
 });
-app.use('/api/data', telpAPIReqLimit);
+app.get('/api/data/random', telpCore.getRandomArt);
 app.get('/api/data/:id', telpCore.getArtObjectByID);
 app.get('/api/data/image/:id', telpCore.getImageByID);
 app.get('/api/data/collection/:artObjectNumber', telpCore.getArtDetails);
