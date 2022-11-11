@@ -80,6 +80,14 @@ async function getDataByID(artObjectNumber) {
     return yourData;
 }
 
+async function getRandomArtImage(req, res) {
+    const rData = await getRandomData();
+    const artObjectNumber = rData.objectNumber;
+    const yourData = await getDataByID(artObjectNumber);
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify(yourData));
+}
+
 async function getArtObjectByID(req, res) {
     telpLog.info(req.params.id);
     res.statusCode = 200;
@@ -206,6 +214,7 @@ export {
     getArtDetails,
     getImageByID,
     getArtObjectByID,
+    getRandomArtImage,
     deleteArtObjectByID,
     connectTelpDatabase as connTelpDB,
     isLoggedIn,
