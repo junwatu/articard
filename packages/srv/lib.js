@@ -162,24 +162,45 @@ async function saveArtImageToDB(artObjectNumber, imageURL) {
      * distributed worker?
      */
     const writer = bucket.openUploadStream(artObjectNumber, {
-        //chunkSizeBytes: 1048576,
+        chunkSizeBytes: 1048576,
         metadata: { field: artObjectNumber, value: Date.now() },
     });
 
     imageBin.data.pipe(writer);
     await finishedDownload(writer);
 
-    return imageURL;
+    /**
+     * Should get URL from env.dev or env production
+     */
+    const imageCacheURL = `${config.cache.image}${artObjectNumber}`;
+    return imageCacheURL;
 }
 
 function readArtImageFromDB(req, res) {
     const artObjectId = req.params.id;
 
-    const cursor = bucket.find({ filename: artObjectId });
-    console.log(cursor);
+    try {
+        const readStream = bucket.openDownloadStreamByName(artObjectId);
+        readStream.pipe(res);
 
-    const readStream = bucket.openDownloadStreamByName(artObjectId);
-    readStream.pipe(res);
+        readStream.on('error', (error) => {
+            if (error.code === 'ENOENT') {
+                res.writeHead(404, { 'Content-Type': 'application/json' });
+                res.end(
+                    JSON.stringify({
+                        api: 'TELP API',
+                        error: 'Image not found',
+                    })
+                );
+            } else {
+                res.writeHead(500, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ api: 'TELP API', error: 'Error' }));
+            }
+        });
+    } catch (error) {
+        res.writeHead(404, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ api: `TELP API`, error: 'Image not found' }));
+    }
 }
 
 async function getArtObjectByID(req, res) {
@@ -247,8 +268,6 @@ async function getRandomArt(req, res) {
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify(rData));
 }
-
-async function cacheImage() {}
 
 const isLoggedIn = async (req, res, next) => {
     if (req.headers.authorization) {
