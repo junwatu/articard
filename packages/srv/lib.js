@@ -2,12 +2,17 @@ import axios from 'axios';
 import redis from 'redis';
 import mongoose from 'mongoose';
 import fs from 'node:fs/promises';
+import * as stream from 'node:stream';
+import { promisify } from 'node:util';
 
 import { config } from './config.js';
 import { telpLog } from './log.js';
 import { ArtObjectSchema } from './schema.js';
 
 let redisClient;
+
+const db = await connectTelpDatabase();
+const bucket = initBucket(db.connections[0].db);
 
 (async () => {
     redisClient = await redis.createClient();
@@ -55,7 +60,19 @@ async function getAPIData(req, res) {
 }
 
 async function connectTelpDatabase() {
-    await mongoose.connect(config.database.url);
+    try {
+        const mongodbConn = await mongoose.connect(config.database.url);
+        return mongodbConn;
+    } catch (error) {
+        telpLog.error(error);
+    }
+}
+
+function initBucket(db) {
+    const bucket = new mongoose.mongo.GridFSBucket(db, {
+        bucketName: 'artobject',
+    });
+    return bucket;
 }
 
 function saveData(data) {
@@ -83,9 +100,86 @@ async function getDataByID(artObjectNumber) {
 async function getRandomArtImage(req, res) {
     const rData = await getRandomData();
     const artObjectNumber = rData.objectNumber;
-    const yourData = await getDataByID(artObjectNumber);
+
+    //const yourData = await getDataByID(artObjectNumber);
+    const artDataDetails = await getArtDetailsByID(artObjectNumber);
+
     res.setHeader('Content-Type', 'application/json');
-    res.end(JSON.stringify(yourData));
+    res.end(artDataDetails);
+}
+
+async function getArtDetailsByID(artObjectNumber) {
+    const artDetailsURL = `${ARTCOLLDETAILS_URL}/${artObjectNumber}?key=${APP_KEY}`;
+    const artDetailsDataCached = await redisClient.get(artObjectNumber);
+    if (artDetailsDataCached) {
+        telpLog.info('art details from cache');
+        return artDetailsDataCached;
+    } else {
+        try {
+            const response = await axios({
+                method: 'get',
+                url: artDetailsURL,
+                responseType: 'json',
+            });
+
+            telpLog.info('art details from server');
+
+            const cachedImageUrlData = await saveArtImageToDB(
+                artObjectNumber,
+                response.data.artObject.webImage.url
+            );
+
+            /**
+             * create cached url for image
+             */
+            response.data.artObject.webImage.cachedImageUrl =
+                cachedImageUrlData;
+
+            redisClient.set(artObjectNumber, JSON.stringify(response.data));
+            return JSON.stringify(response.data);
+        } catch (error) {
+            telpLog.error(error);
+        }
+    }
+}
+
+/**
+ * Save image to database
+ * @param {*} imageURL
+ * @returns
+ */
+
+async function saveArtImageToDB(artObjectNumber, imageURL) {
+    const finishedDownload = promisify(stream.finished);
+
+    const imageBin = await axios({
+        method: 'get',
+        url: imageURL,
+        responseType: 'stream',
+    });
+
+    /**
+     * distributed worker?
+     */
+    const writer = bucket.openUploadStream(artObjectNumber, {
+        //chunkSizeBytes: 1048576,
+        metadata: { field: artObjectNumber, value: Date.now() },
+    });
+
+    imageBin.data.pipe(writer);
+    await finishedDownload(writer);
+
+    return imageURL;
+}
+
+function readArtImageFromDB(req, res) {
+    const artObjectId = req.params.id;
+
+    const cursor = bucket.find({ filename: artObjectId });
+    console.log(cursor);
+
+    const readStream = bucket.openDownloadStreamByName(artObjectId);
+    readStream.pipe(res);
 }
 
 async function getArtObjectByID(req, res) {
@@ -115,7 +209,6 @@ async function getArtDetails(req, res) {
 
     const artDetailsDataCached = await redisClient.get(artObjectNumber);
     if (artDetailsDataCached) {
-        console.log(artDetailsDataCached);
         telpLog.info('Data from cache');
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(artDetailsDataCached);
@@ -154,6 +247,8 @@ async function getRandomArt(req, res) {
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify(rData));
 }
+
+async function cacheImage() {}
 
 const isLoggedIn = async (req, res, next) => {
     if (req.headers.authorization) {
@@ -204,6 +299,7 @@ async function authUser(username, password) {
 }
 
 export {
+    initBucket,
     getRandomArt,
     deleteArtObject,
     getAPIData,
@@ -215,6 +311,7 @@ export {
     getImageByID,
     getArtObjectByID,
     getRandomArtImage,
+    readArtImageFromDB as streamArtImage,
     deleteArtObjectByID,
     connectTelpDatabase as connTelpDB,
     isLoggedIn,
