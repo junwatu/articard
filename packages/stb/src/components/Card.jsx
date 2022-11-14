@@ -8,7 +8,9 @@ export default function Card() {
     const title = data.artObject.title;
     const artNumber = data.artObject.objectNumber;
 
-    setData(imgSrc);
+    const imgSrcCh = data.artObject.webImage?.cachedImageUrl;
+    console.log(`cached image url: ${imgSrcCh}`);
+    imgSrcCh ? setData(imgSrcCh) : setData(imgSrc);
     setDataTitle(title);
     setArtNumber(artNumber);
   }, []);
