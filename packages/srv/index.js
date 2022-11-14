@@ -31,11 +31,6 @@ const telpAPIReqLimit = rateLimit({
 const app = express();
 const SRV_PORT = config.app.port;
 
-telpCore
-    .connTelpDB()
-    .then(() => telpLog.info(`mongodb database ok`))
-    .catch((err) => telpLog.error(err));
-
 app.use(cors());
 app.use(express.static(path.join(__dirname, '/publik')));
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -54,6 +49,7 @@ app.get('/api/data/random', telpCore.getRandomArt);
 app.get('/api/data/image/random', telpCore.getRandomArtImage);
 app.get('/api/data/:id', telpCore.getArtObjectByID);
 app.get('/api/data/image/:id', telpCore.getImageByID);
+app.get('/api/data/image/s/:id', telpCore.streamArtImage);
 app.get('/api/data/collection/:artObjectNumber', telpCore.getArtDetails);
 
 /**
