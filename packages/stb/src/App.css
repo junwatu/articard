@@ -42,3 +42,17 @@ body {
 .read-the-docs {
   color: #888;
 }
+
+.title {
+  font-size: 1em;
+  line-height: 1.5em;
+  font-weight: 500;
+  color: #fff;
+}
+
+.titleDate {
+  font-size: 0.85em;
+  line-height: 1.5em;
+  font-weight: 500;
+  color: #fff;
+}
