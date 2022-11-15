@@ -5,11 +5,13 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "concurrently 'npm run srv' 'npm run client'",
+    "dev": "concurrently 'npm run srv' 'npm run client' 'npm run preview'",
     "srv": "npm run -w ./packages/srv start",
     "client": "npm run -w ./packages/stb dev",
+    "preview": "npm run -w ./packages/stb preview",
     "redis-docker": "docker run --name telp-redis -d redis",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles",
+    "load-testing": "npx artillery quick --count 1100 --num 10 http://localhost:3113/api/data/image/random"
   },
   "keywords": [],
   "author": "Equan P. (@junwatu)",

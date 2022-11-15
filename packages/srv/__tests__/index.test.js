@@ -14,7 +14,9 @@ describe('routes', () => {
 
     test('/admin/api/data', async () => {
         try {
-            const response = await request(telpServer).get('/admin/api/data');
+            const response = await request(telpServer)
+                .get('/admin/api/data')
+                .auth('admin', 'telpadmin');
             expect(JSON.parse(response.text)?.userSet?.count).toEqual(197);
         } catch (error) {
             // eslint-disable-next-line jest/no-conditional-expect

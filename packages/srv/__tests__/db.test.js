@@ -25,4 +25,3 @@ describe('MongoDB', () => {
         expect(data.links.artobject).toEqual(artObject.links.artobject);
     });
 });
-5;
