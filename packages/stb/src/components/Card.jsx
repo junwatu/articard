@@ -23,12 +23,14 @@ export default function Card() {
     getData().catch((e) => console.log(e));
   }, [getData]);
   return (
-    <div className="App">
-      <div>
-        <img src={data} width="100%" />
-        <div>
-          <p class="title">{dataTitle}</p>
-          <p class="titleDate">{artNumber}</p>
+    <div className="card card-compact w-96 bg-base-100 shadow-xl">
+      <figure>
+        <img src={data} />
+      </figure>
+      <div className="card-body">
+        <h2 className="card-title">{dataTitle}</h2>
+        <div className="card-actions justify-end">
+          <p>{artNumber}</p>
         </div>
       </div>
     </div>
