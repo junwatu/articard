@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
 
+const randomImageURL = import.meta.env.VITE_RANDOM_IMAGE_API_URL;
+
 export default function Card() {
   const getData = useCallback(async () => {
-    const response = await fetch(`http://localhost:3113/api/data/image/random`);
+    const response = await fetch(randomImageURL);
     const data = await response.json();
     const imgSrc = data.artObject.webImage.url;
     const title = data.artObject.title;
