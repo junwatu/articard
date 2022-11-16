@@ -27,38 +27,6 @@ const APP_KEY = config.app.key;
 
 const ArtObject = mongoose.model('artobject', ArtObjectSchema);
 
-async function getAPIData(req, res) {
-    try {
-        const dataCached = await redisClient.get('telpAPIDataCached');
-        if (dataCached) {
-            telpLog.info('Data from cache');
-            res.writeHead(200, { 'Content-Type': 'application/json' });
-            res.end(dataCached);
-        } else {
-            await axios({
-                method: 'get',
-                url: USERSET_URL,
-                responseType: 'json',
-            }).then((response) => {
-                const dataArtObject = response.data;
-                redisClient.set(
-                    'telpAPIDataCached',
-                    JSON.stringify(dataArtObject)
-                );
-                telpLog.info('Data from server');
-                res.writeHead(200, { 'Content-Type': 'application/json' });
-
-                saveData(dataArtObject);
-
-                res.end(JSON.stringify(dataArtObject));
-            });
-        }
-    } catch (error) {
-        telpLog.error(error);
-        res.status(404).send('Data Unavailable');
-    }
-}
-
 async function connectTelpDatabase() {
     try {
         const mongodbConn = await mongoose.connect(config.database.url);
@@ -217,13 +185,6 @@ async function getArtImage(artObjectId) {
     return artData[0]?.image?.cdnUrl;
 }
 
-async function deleteArtObject(artObjectNumber) {
-    const isDeleted = await ArtObject.deleteOne({
-        objectNumber: artObjectNumber,
-    });
-    return isDeleted;
-}
-
 async function getArtDetails(req, res) {
     const artObjectNumber = req.params.artObjectNumber;
     const artDetailsURL = `${ARTCOLLDETAILS_URL}/${artObjectNumber}?key=${APP_KEY}`;
@@ -315,6 +276,46 @@ async function authUser(username, password) {
             return false;
         }
     }
+}
+
+// Admin API
+async function getAPIData(req, res) {
+    try {
+        const dataCached = await redisClient.get('telpAPIDataCached');
+        if (dataCached) {
+            telpLog.info('Data from cache');
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(dataCached);
+        } else {
+            await axios({
+                method: 'get',
+                url: USERSET_URL,
+                responseType: 'json',
+            }).then((response) => {
+                const dataArtObject = response.data;
+                redisClient.set(
+                    'telpAPIDataCached',
+                    JSON.stringify(dataArtObject)
+                );
+                telpLog.info('Data from server');
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+
+                saveData(dataArtObject);
+
+                res.end(JSON.stringify(dataArtObject));
+            });
+        }
+    } catch (error) {
+        telpLog.error(error);
+        res.status(404).send('Data Unavailable');
+    }
+}
+
+async function deleteArtObject(artObjectNumber) {
+    const isDeleted = await ArtObject.deleteOne({
+        objectNumber: artObjectNumber,
+    });
+    return isDeleted;
 }
 
 export {
