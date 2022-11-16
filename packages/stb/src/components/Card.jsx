@@ -9,7 +9,6 @@ export default function Card() {
     const artNumber = data.artObject.objectNumber;
 
     const imgSrcCh = data.artObject.webImage?.cachedImageUrl;
-    console.log(`cached image url: ${imgSrcCh}`);
     imgSrcCh ? setData(imgSrcCh) : setData(imgSrc);
     setDataTitle(title);
     setArtNumber(artNumber);
@@ -23,7 +22,7 @@ export default function Card() {
     getData().catch((e) => console.log(e));
   }, [getData]);
   return (
-    <div className="card card-compact w-96 bg-base-100 shadow-xl">
+    <div className="card card-compact w-96 glass">
       <figure>
         <img src={data} />
       </figure>
