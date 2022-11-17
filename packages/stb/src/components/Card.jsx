@@ -1,15 +1,16 @@
 import { useState, useEffect, useCallback } from "react";
 
+const randomImageURL = import.meta.env.VITE_RANDOM_IMAGE_API_URL;
+
 export default function Card() {
   const getData = useCallback(async () => {
-    const response = await fetch(`http://localhost:3113/api/data/image/random`);
+    const response = await fetch(randomImageURL);
     const data = await response.json();
     const imgSrc = data.artObject.webImage.url;
     const title = data.artObject.title;
     const artNumber = data.artObject.objectNumber;
 
     const imgSrcCh = data.artObject.webImage?.cachedImageUrl;
-    console.log(`cached image url: ${imgSrcCh}`);
     imgSrcCh ? setData(imgSrcCh) : setData(imgSrc);
     setDataTitle(title);
     setArtNumber(artNumber);
@@ -23,12 +24,14 @@ export default function Card() {
     getData().catch((e) => console.log(e));
   }, [getData]);
   return (
-    <div className="App">
-      <div>
-        <img src={data} width="100%" />
-        <div>
-          <p class="title">{dataTitle}</p>
-          <p class="titleDate">{artNumber}</p>
+    <div className="card card-compact w-96 glass">
+      <figure>
+        <img src={data} />
+      </figure>
+      <div className="card-body">
+        <h2 className="card-title">{dataTitle}</h2>
+        <div className="card-actions justify-end">
+          <p>{artNumber}</p>
         </div>
       </div>
     </div>
