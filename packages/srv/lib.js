@@ -53,7 +53,6 @@ function saveData(data) {
 }
 
 async function getRandomData() {
-    //get random data from mongodb collection
     const count = await ArtObject.countDocuments();
     const random = Math.floor(Math.random() * count);
     const artObject = await ArtObject.findOne().skip(random);
@@ -69,7 +68,6 @@ async function getRandomArtImage(req, res) {
     const rData = await getRandomData();
     const artObjectNumber = rData.objectNumber;
 
-    //const yourData = await getDataByID(artObjectNumber);
     const artDataDetails = await getArtDetailsByID(artObjectNumber);
 
     res.setHeader('Content-Type', 'application/json');
@@ -137,9 +135,6 @@ async function saveArtImageToDB(artObjectNumber, imageURL) {
     imageBin.data.pipe(writer);
     await finishedDownload(writer);
 
-    /**
-     * Should get URL from env.dev or env production
-     */
     const imageCacheURL = `${config.cache.image}${artObjectNumber}`;
     return imageCacheURL;
 }
@@ -278,7 +273,6 @@ async function authUser(username, password) {
     }
 }
 
-// Admin API
 async function getAPIData(req, res) {
     try {
         const dataCached = await redisClient.get('telpAPIDataCached');
