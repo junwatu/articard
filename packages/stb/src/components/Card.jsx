@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { LatinToAksara } from "@sajenid/aksara.js";
 
 const randomImageURL = import.meta.env.VITE_RANDOM_IMAGE_API_URL;
 
@@ -7,6 +8,7 @@ export default function Card() {
     const response = await fetch(randomImageURL);
     const data = await response.json();
     const imgSrc = data.artObject.webImage.url;
+    1;
     const title = data.artObject.title;
     const artNumber = data.artObject.objectNumber;
 
@@ -29,8 +31,8 @@ export default function Card() {
         <img src={data} />
       </figure>
       <div className="card-body">
-        <h2 className="card-title">{dataTitle}</h2>
-        <div className="card-actions justify-end">
+        <h2 className="card-title">{LatinToAksara(dataTitle)}</h2>
+        <div className="card-actions justify-end pt-6">
           <p>{artNumber}</p>
         </div>
       </div>
