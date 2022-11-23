@@ -30,7 +30,6 @@ app.use((req, res, next) => {
 });
 
 app.get('/', staticRoot);
-
 app.use('/user/api/v1', telpAPIReqLimit);
 app.use('/user/api/v1', userRouter);
 app.use('/admin/api/v1', adminRouter);

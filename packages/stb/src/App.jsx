@@ -1,15 +1,16 @@
 import "./App.css";
-import Card from "./components/Card";
+import Navigation from "./components/Navigation";
 
-function App() {
+function App({ children }) {
   return (
-    <div className="flex items-center justify-center h-screen">
-      <div className="artboard phone-4">
-        <div className="pt-40">
-          <Card />
+    <>
+      <Navigation />
+      <div className="flex items-center justify-center h-screen">
+        <div className="artboard phone-4">
+          <div className="pt-10">{children}</div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

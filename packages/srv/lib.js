@@ -1,13 +1,12 @@
 import axios from 'axios';
 import redis from 'redis';
 import mongoose from 'mongoose';
-import fs from 'node:fs/promises';
 import * as stream from 'node:stream';
 import { promisify } from 'node:util';
 
 import { config } from './config.js';
 import { telpLog } from './log.js';
-import { ArtObjectSchema } from './schema.js';
+import { ArtObjectSchema, UserSchema } from './schema.js';
 
 let redisClient;
 
@@ -26,6 +25,7 @@ const ARTCOLLDETAILS_URL = config.sources.rijksmuseum.collectionDetails.base;
 const APP_KEY = config.app.key;
 
 const ArtObject = mongoose.model('artobject', ArtObjectSchema);
+const User = mongoose.model('user', UserSchema);
 
 async function connectTelpDatabase() {
     try {
@@ -259,17 +259,16 @@ const isLoggedIn = async (req, res, next) => {
 };
 
 async function authUser(username, password) {
-    const data = await fs.readFile('secret.json', { encoding: 'utf-8' });
-    let datar = JSON.parse(data).users;
-    for (const iterator of datar) {
-        if (
-            iterator?.username === username &&
-            iterator?.password === password
-        ) {
+    const user = await User.findOne({ username: username });
+    if (user) {
+        //const isMatch = await bcrypt.compare(password, user.password);
+        if (password === user.password) {
             return true;
         } else {
             return false;
         }
+    } else {
+        return false;
     }
 }
 
@@ -312,7 +311,35 @@ async function deleteArtObject(artObjectNumber) {
     return isDeleted;
 }
 
+async function loginUser(req, res) {
+    const username = req.body.username;
+    const password = req.body.password;
+
+    const authFlag = await authUser(username, password);
+    if (authFlag) {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.end(
+            JSON.stringify({
+                api: 'Login Success',
+                message: `Welcome, ${username} `,
+                user: username,
+            })
+        );
+    } else {
+        res.statusCode = 401;
+        res.setHeader('Content-Type', 'application/json');
+        res.end(
+            JSON.stringify({
+                api: 'Login Failed',
+                error: 'Invalid Authentication',
+            })
+        );
+    }
+}
+
 export {
+    loginUser,
     initBucket,
     getRandomArt,
     deleteArtObject,

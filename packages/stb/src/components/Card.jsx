@@ -8,7 +8,6 @@ export default function Card() {
     const response = await fetch(randomImageURL);
     const data = await response.json();
     const imgSrc = data.artObject.webImage.url;
-    1;
     const title = data.artObject.title;
     const artNumber = data.artObject.objectNumber;
 

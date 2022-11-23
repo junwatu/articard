@@ -4,7 +4,7 @@
 const ArtObjectSchema = {
     links: {
         artobject: String,
-        web: String
+        web: String,
     },
     id: String,
     objectNumber: String,
@@ -26,8 +26,16 @@ const ArtObjectSchema = {
         width: Number,
         height: Number,
         offsetPercentageX: Number,
-        offsetPercentageY: Number
-    }
-}
+        offsetPercentageY: Number,
+    },
+};
 
-export { ArtObjectSchema }
+const UserSchema = {
+    username: String,
+    password: String,
+    email: String,
+    name: String,
+    role: String,
+};
+
+export { ArtObjectSchema, UserSchema };

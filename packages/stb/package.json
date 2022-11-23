@@ -12,7 +12,8 @@
     "@sajenid/aksara.js": "^1.0.0-beta.6",
     "daisyui": "^2.40.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.4.3"
   },
   "devDependencies": {
     "@playwright/test": "^1.27.1",
