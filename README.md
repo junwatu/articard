@@ -50,6 +50,8 @@ $ redis-server
 
 ### File Configuration
 
+change any keys with your settings.
+
 `.env`
 
 ```bash
