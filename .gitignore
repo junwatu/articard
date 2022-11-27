@@ -133,3 +133,6 @@ dist
 data.json
 object.json
 publik
+
+# Identifier
+.Zone.Identifier
