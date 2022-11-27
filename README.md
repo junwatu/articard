@@ -25,11 +25,7 @@ mongod --port 27117 --dbpath=C:\MongoDB\data\db --bind_ip 0.0.0.0
 $ redis-server
 
 2195:C 27 Nov 2022 07:55:05.426 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
-2195:C 27 Nov 2022 07:55:05.427 # Redis version=7.0.5, bits=64, commit=00000000, modified=0, pid=2195, just started
-2195:C 27 Nov 2022 07:55:05.427 # Warning: no config file specified, using the default config. In order to specify
-a config file use ./redis-server /path/to/redis.conf
-2195:M 27 Nov 2022 07:55:05.428 * Increased maximum number of open files to 10032 (it was originally set to 1024).
-2195:M 27 Nov 2022 07:55:05.428 * monotonic clock: POSIX clock_gettime
+...
                 _._
            _.-``__ ''-._
       _.-``    `.  `_.  ''-._           Redis 7.0.5 (00000000/0) 64 bit
@@ -65,4 +61,19 @@ TELP_RIJKSMUSEUM_BASE_USERSETS_URL=https://www.rijksmuseum.nl/api/en/usersets
 TELP_DATABASE_URL=<production_database_url>
 TELP_DATABASE_URL_DEV=mongodb://172.31.0.1:27117/telp
 TELP_HOST=localhost
+```
+
+### Node.js
+
+Install all application development dependencies
+
+```bash
+
+npm install
+```
+
+Run the application
+
+```bash
+npm run dev
 ```
