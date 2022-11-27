@@ -52,7 +52,7 @@ $ redis-server
 
 ### File Configuration
 
-change any keys with your settings.
+You need to setup `.env` file within `srv` package and change any keys with your custom settings.
 
 `.env`
 
