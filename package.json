@@ -22,7 +22,6 @@
   "license": "MIT",
   "workspaces": [
     "packages/srv",
-    "packages/kln",
     "packages/stb"
   ],
   "engines": {
