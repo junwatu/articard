@@ -1,6 +1,7 @@
-# Telp
-
-🌱
+<h2 align="center">
+<p align="center"><img src="https://github.com/junwatu/telp/blob/main/articard.svg?raw=true" height="512px" alt="arti-card"></p>
+<p align="center">Articard</p>
+</h2>
 
 ## MongoDB
 
