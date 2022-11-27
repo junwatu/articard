@@ -79,3 +79,9 @@ Run the application
 ```bash
 npm run dev
 ```
+
+Go to the browser and open `http://localhost:3113`
+
+## Docker
+
+COMING SOON
