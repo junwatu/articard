@@ -5,11 +5,11 @@
 
 🃏 Art History Card 🃏
 
-This full-stack web application is useful enough if you love art and history. This application is using data and API from [Rijksmuseum](https://data.rijksmuseum.nl/object-metadata/api/) so you should setup api key, username and userset.
-
-> This application is using MERN stack
+This full-stack web application is useful enough if you love art and history. This application is using data and API from [Rijksmuseum](https://data.rijksmuseum.nl/object-metadata/api/) so you should have `api key`, `username` and `userset`.
 
 ## Installation
+
+This repository is monorepo and using MERN stack.
 
 ### MongoDB
 
