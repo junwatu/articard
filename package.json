@@ -1,6 +1,7 @@
 {
   "name": "telp",
-  "version": "0.0.1",
+  "version": "0.0.1-aplha",
+  "private": true,
   "description": "",
   "main": "index.js",
   "type": "module",
@@ -13,7 +14,10 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles",
     "load-testing": "npx artillery quick --count 1100 --num 10 http://localhost:3113/api/data/image/random"
   },
-  "keywords": [],
+  "keywords": [
+    "art-card",
+    "art-history"
+  ],
   "author": "Equan P. (@junwatu)",
   "license": "MIT",
   "workspaces": [
