@@ -1,4 +1,7 @@
-# Articard
+<h2 align="center">
+<p align="center"><img src="https://github.com/junwatu/articard/blob/main/articard.png?raw=true" height="500px" alt="arti-card"></p>
+<p align="center">Articard</p>
+</h2>
 
 🃏 Art History Card 🃏
 
