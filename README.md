@@ -1,9 +1,10 @@
 <h2 align="center">
 <p align="center"><img src="https://github.com/junwatu/articard/blob/main/articard.png?raw=true" height="500px" alt="arti-card"></p>
-<p align="center">Articard</p>
 </h2>
 
-🃏 Art History Card 🃏
+# Articard
+
+**Articard** is an art history card web application.
 
 This full-stack web application is useful enough if you love art and history. This application is using data and API from [Rijksmuseum](https://data.rijksmuseum.nl/object-metadata/api/) so you should have `api key`, `username` and `userset`.
 
