@@ -6,11 +6,11 @@
 
 **Articard** is an art history card web application.
 
-This full-stack web application is useful enough if you love art and history. This application is using data and API from [Rijksmuseum](https://data.rijksmuseum.nl/object-metadata/api/) so you should have `api key`, `username` and `userset`.
+This is full-stack web application and I hope useful enough if you love art and history. This application is using data and API from [Rijksmuseum](https://data.rijksmuseum.nl/object-metadata/api/) so you should have `api key`, `username` and `userset`.
 
 ## Installation
 
-This repository is monorepo and using MERN stack.
+This repository is monorepo and using MERN stack. That's means you need Node.js, MongoDB as database plus Redis as cache. 
 
 ### MongoDB
 
