@@ -10,7 +10,7 @@ This is full-stack web application and I hope useful enough if you love art and 
 
 ## Installation
 
-This repository is monorepo and using MERN stack. That's means you need Node.js, MongoDB as database plus Redis as cache. 
+This repository is monorepo and using MERN stack. That's means you need Node.js, MongoDB as database plus Redis as cache.
 
 ### MongoDB
 
@@ -66,11 +66,11 @@ TELP_RIJKSMUSEUM_BASE_USERSETS_URL=https://www.rijksmuseum.nl/api/en/usersets
 TELP_RIJKSMUSEUM_BASE_COLLECTION_URL=https://www.rijksmuseum.nl/api/en/collection
 
 #mongodb address
-TELP_DATABASE_URL=[mongodb://mongo-server:27017/telp] 
+TELP_DATABASE_URL=[mongodb://mongo-server:27017/telp]
 #redis address
-TELP_REDIS_URL=[redis://redis-server:6379] 
+TELP_REDIS_URL=[redis://redis-server:6379]
 # your domain
-TELP_HOST=[https://junwatu-improved-space-waddle-pj7jwxv5j5367jv-3113.preview.app.github.dev] 
+TELP_HOST=[https://junwatu-improved-space-waddle-pj7jwxv5j5367jv-3113.preview.app.github.dev]
 ```
 
 ### Node.js
@@ -92,10 +92,45 @@ Go to the browser and open `http://localhost:3113`
 
 ## Docker
 
-Using Docker Compose to run web application, mongodb and redis
+You can use Docker Compose to run web application, mongodb and redis server.
 
-```
+```bash
 docker compose up
+```
+
+What you need to do is setup `.env` within `docker-compose.yaml` and change any keys `[YOUR_...]` with your custom settings.
+
+```yaml
+services:
+  web:
+    build: .
+    ports:
+      - "3113:3113"
+    environment:
+      - TELP_PORT=3113
+      - TELP_RIJKSMUSEUM_API_KEY=[YOUR_USER_API_KEY]
+      - TELP_RIJKSMUSEUM_USER_ID=[YOUR_USER_ID]
+      - TELP_RIJKSMUSEUM_USERSET_NAME=[YOUR_USER_USERSET]
+      - TELP_RIJKSMUSEUM_BASE_USERSETS_URL=https://www.rijksmuseum.nl/api/en/usersets
+      - TELP_RIJKSMUSEUM_BASE_COLLECTION_URL=https://www.rijksmuseum.nl/api/en/collection
+      - TELP_DATABASE_URL=mongodb://mongo-server:27017/telp
+      - TELP_REDIS_URL=redis://redis-server:6379
+      - TELP_HOST=[YOUR_DOMAIN]
+    depends_on:
+      - redis
+      - mongo
+  redis:
+    container_name: redis-server
+    image: redis
+    ports:
+      - "6379:6379"
+  mongo:
+    container_name: mongo-server
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - ../data/db:/data/db
 ```
 
 ## License
