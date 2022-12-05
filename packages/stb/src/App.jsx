@@ -7,7 +7,7 @@ function App({ children }) {
       <Navigation />
       <div className="flex items-center justify-center h-screen">
         <div className="artboard phone-4">
-          <div className="pt-10">{children}</div>
+          <div className="pt-20">{children}</div>
         </div>
       </div>
     </>
