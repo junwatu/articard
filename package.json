@@ -9,6 +9,7 @@
     "dev": "concurrently 'npm run srv' 'npm run client' 'npm run preview'",
     "srv": "npm run -w ./packages/srv start",
     "client": "npm run -w ./packages/stb dev",
+    "client-build": "npm run -w packages/stb build",
     "preview": "npm run -w ./packages/stb preview",
     "redis-docker": "docker run --name telp-redis -d redis",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles",
