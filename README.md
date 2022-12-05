@@ -59,13 +59,18 @@ You need to setup `.env` file within `srv` package and change any keys with your
 
 ```bash
 TELP_PORT=3113
-TELP_RIJKSMUSEUM_API_KEY=<api_key>
-TELP_RIJKSMUSEUM_USER_ID=<user_id>
-TELP_RIJKSMUSEUM_USERSET_NAME=<userset_name>
+TELP_RIJKSMUSEUM_API_KEY=[USER_API_KEY]
+TELP_RIJKSMUSEUM_USER_ID=[USER_ID]
+TELP_RIJKSMUSEUM_USERSET_NAME=[USER_USERSET]
 TELP_RIJKSMUSEUM_BASE_USERSETS_URL=https://www.rijksmuseum.nl/api/en/usersets
-TELP_DATABASE_URL=<production_database_url>
-TELP_DATABASE_URL_DEV=mongodb://172.31.0.1:27117/telp
-TELP_HOST=localhost
+TELP_RIJKSMUSEUM_BASE_COLLECTION_URL=https://www.rijksmuseum.nl/api/en/collection
+
+#mongodb address
+TELP_DATABASE_URL_DEV=[mongodb://mongo-server:27017/telp] 
+#redis address
+TELP_REDIS_URL=[redis://redis-server:6379] 
+# your domain
+TELP_HOST=[https://junwatu-improved-space-waddle-pj7jwxv5j5367jv-3113.preview.app.github.dev] 
 ```
 
 ### Node.js
