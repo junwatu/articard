@@ -66,7 +66,7 @@ TELP_RIJKSMUSEUM_BASE_USERSETS_URL=https://www.rijksmuseum.nl/api/en/usersets
 TELP_RIJKSMUSEUM_BASE_COLLECTION_URL=https://www.rijksmuseum.nl/api/en/collection
 
 #mongodb address
-TELP_DATABASE_URL_DEV=[mongodb://mongo-server:27017/telp] 
+TELP_DATABASE_URL=[mongodb://mongo-server:27017/telp] 
 #redis address
 TELP_REDIS_URL=[redis://redis-server:6379] 
 # your domain
