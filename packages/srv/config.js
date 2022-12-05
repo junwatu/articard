@@ -8,7 +8,7 @@ const telpConfig = {
         key: process.env.TELP_RIJKSMUSEUM_API_KEY,
     },
     database: {
-        url: process.env.TELP_DATABASE_URL_DEV,
+        url: process.env.TELP_DATABASE_URL,
     },
     cache: {
         url: process.env.TELP_REDIS_URL,
