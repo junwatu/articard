@@ -1,4 +1,3 @@
-version: "3.9"
 services:
   web:
     build: .
@@ -8,10 +7,12 @@ services:
       - redis
       - mongo
   redis:
+    container_name: redis-server
     image: redis
     ports:
       - "6379:6379"
   mongo:
+    container_name: mongo-server
     image: mongo
     ports:
       - "27017:27017"
