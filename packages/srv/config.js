@@ -12,7 +12,7 @@ const telpConfig = {
     },
     cache: {
         url: process.env.TELP_REDIS_URL,
-        image: `http://${process.env.TELP_HOST}:${process.env.TELP_PORT}/user/api/v1/data/image/s/`,
+        image: `${process.env.TELP_HOST}/user/api/v1/data/image/s/`,
     },
     sources: {
         rijksmuseum: {
