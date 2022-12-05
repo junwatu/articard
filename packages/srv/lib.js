@@ -14,7 +14,9 @@ const db = await connectTelpDatabase();
 const bucket = initBucket(db.connections[0].db);
 
 (async () => {
-    redisClient = await redis.createClient();
+    redisClient = await redis.createClient({
+        url: config.cache.redis,
+    });
     redisClient.on('error', (error) => telpLog.error(error));
     redisClient.on('connect', () => telpLog.info('redis cache ok'));
     await redisClient.connect();
