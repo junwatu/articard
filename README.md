@@ -59,18 +59,17 @@ You need to setup `.env` file within `srv` package and change any keys with your
 
 ```bash
 TELP_PORT=3113
-TELP_RIJKSMUSEUM_API_KEY=[USER_API_KEY]
-TELP_RIJKSMUSEUM_USER_ID=[USER_ID]
-TELP_RIJKSMUSEUM_USERSET_NAME=[USER_USERSET]
+TELP_RIJKSMUSEUM_API_KEY=[YOUR_USER_API_KEY]
+TELP_RIJKSMUSEUM_USER_ID=[YOUR_USER_ID]
+TELP_RIJKSMUSEUM_USERSET_NAME=[YOUR_USER_USERSET]
 TELP_RIJKSMUSEUM_BASE_USERSETS_URL=https://www.rijksmuseum.nl/api/en/usersets
 TELP_RIJKSMUSEUM_BASE_COLLECTION_URL=https://www.rijksmuseum.nl/api/en/collection
-
-#mongodb address
-TELP_DATABASE_URL=[mongodb://mongo-server:27017/telp]
-#redis address
-TELP_REDIS_URL=[redis://redis-server:6379]
+#mongodb address. change this.
+TELP_DATABASE_URL=mongodb://mongo-server:27017/telp
+#redis address. change this.
+TELP_REDIS_URL=redis://redis-server:6379
 # your domain
-TELP_HOST=[https://junwatu-improved-space-waddle-pj7jwxv5j5367jv-3113.preview.app.github.dev]
+TELP_HOST=[YOUR_DOMAIN]
 ```
 
 ### Node.js
@@ -92,13 +91,9 @@ Go to the browser and open `http://localhost:3113`
 
 ## Docker
 
-You can use Docker Compose to run web application, mongodb and redis server.
+You can use Docker Compose to run articard, mongodb and redis server all in one host.
 
-```bash
-docker compose up
-```
-
-What you need to do is setup `.env` within `docker-compose.yaml` and change any keys `[YOUR_...]` with your custom settings.
+What you need to do first is setup `.env` within `docker-compose.yaml` and change any keys `[YOUR_...]` with your custom settings.
 
 ```yaml
 services:
@@ -131,6 +126,12 @@ services:
       - "27017:27017"
     volumes:
       - ../data/db:/data/db
+```
+
+and then compose docker service with running command
+
+```bash
+docker compose up
 ```
 
 ## License
