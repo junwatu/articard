@@ -92,7 +92,11 @@ Go to the browser and open `http://localhost:3113`
 
 ## Docker
 
-COMING SOON
+Using Docker Compose to run web application, mongodb and redis
+
+```
+docker compose up
+```
 
 ## License
 
