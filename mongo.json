@@ -1,0 +1,5 @@
+{
+  "name": "mongo",
+  "port": 27017,
+  "tags": ["database"]
+}
