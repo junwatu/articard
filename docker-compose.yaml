@@ -1,4 +1,9 @@
 services:
+  consul:
+    image: consul:latest
+    ports:
+      - "8500:8500"
+      - "8600:8600/udp"
   web:
     container_name: articard
     build: .
@@ -6,15 +11,16 @@ services:
       - "3113:3113"
     environment:
       - TELP_PORT=3113
-      - TELP_RIJKSMUSEUM_API_KEY=
-      - TELP_RIJKSMUSEUM_USER_ID=
-      - TELP_RIJKSMUSEUM_USERSET_NAME=
+      - TELP_RIJKSMUSEUM_API_KEY=0tLStV9s
+      - TELP_RIJKSMUSEUM_USER_ID=2225745
+      - TELP_RIJKSMUSEUM_USERSET_NAME=javanese
       - TELP_RIJKSMUSEUM_BASE_USERSETS_URL=https://www.rijksmuseum.nl/api/en/usersets
       - TELP_RIJKSMUSEUM_BASE_COLLECTION_URL=https://www.rijksmuseum.nl/api/en/collection
       - TELP_DATABASE_URL=mongodb://mongo-server:27017/telp
       - TELP_REDIS_URL=redis://redis-server:6379
-      - TELP_HOST=
+      - TELP_HOST=localhost
     depends_on:
+      - consul
       - redis
       - mongo
   redis:
@@ -22,6 +28,8 @@ services:
     image: redis
     ports:
       - "6379:6379"
+    depends_on:
+      - consul
   mongo:
     container_name: mongo-server
     image: mongo
@@ -29,3 +37,5 @@ services:
       - "27017:27017"
     volumes:
       - ../data/db:/data/db
+    depends_on:
+      - consul
