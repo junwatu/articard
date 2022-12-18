@@ -16,6 +16,7 @@ import { userRouter } from './routes/user.js';
 import { adminRouter } from './routes/admin.js';
 import { telpAPIReqLimit } from './utils/ratelimit.js';
 import { errorResponse, runNote, staticRoot } from './utils/srv.js';
+import { healthRoute } from './routes/health.js';
 
 const app = express();
 const SRV_PORT = config.app.port;
@@ -33,6 +34,7 @@ app.get('/', staticRoot);
 app.use('/user/api/v1', telpAPIReqLimit);
 app.use('/user/api/v1', userRouter);
 app.use('/admin/api/v1', adminRouter);
+app.use("/health", healthRoute)
 
 app.use(errorResponse);
 http.createServer(app).listen(SRV_PORT, runNote(SRV_PORT));
